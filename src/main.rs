@@ -17,7 +17,6 @@ fn main() -> battery::Result<()> {
 
     let battery_threshold: f32 = match get_battery_threshold() {
         Ok(val) => {
-            println!("{}", val);
             val
         }
         Err(_) => {
