@@ -3,7 +3,6 @@ use std::io;
 use std::thread;
 use std::time::Duration;
 use dotenv;
-use std::env;
 use std::fs;
 use std::path::Path;
 
@@ -15,21 +14,7 @@ fn main() -> battery::Result<()> {
 
     let manager = Manager::new()?;
 
-    let battery_threshold: f32 = match get_battery_threshold() {
-        Ok(val) => {
-            val
-        }
-        Err(_) => {
-            loop {
-                match set_environment_var() {
-                    Ok(val) => {
-                        break val;
-                    }
-                    Err(e) => println!("{:#?}", e)
-                }
-            }
-        }
-    };
+    let battery_threshold: f32 = init_threshold(); 
 
     let mut battery = match manager.batteries()?.next() {
         Some(Ok(battery)) => battery,
@@ -54,6 +39,24 @@ fn main() -> battery::Result<()> {
     }
 }
 
+fn init_threshold() -> f32 {
+
+    match get_battery_threshold() {
+        Ok(val) => {
+            val
+        }
+        Err(_) => {
+            loop {
+                match set_environment_var() {
+                    Ok(val) => {
+                        break val;
+                    }
+                    Err(e) => println!("{:#?}", e)
+                }
+            }
+        }
+    }
+}
 
 fn set_environment_var() -> Result<f32, String> {
 
@@ -73,12 +76,13 @@ fn set_environment_var() -> Result<f32, String> {
         return Err(String::from("Error: 'BATTERY_MIN_THESHOLD' must be greater than 4 but less than 50"));
     } 
 
-    env::set_var(BATTERY_MIN_THRESHOLD, input.to_string());
 
     if !Path::new(".env").exists() {
-        if let Err(e) = fs::write(".env", format!("{BATTERY_MIN_THRESHOLD}={}", input.to_string())) {
-            return Err(e.to_string());
-        }
+       let _ =  fs::File::create_new(".env");
+    }
+
+    if let Err(e) = fs::write(".env", format!("{BATTERY_MIN_THRESHOLD}={}", input.to_string())) {
+        return Err(e.to_string());
     }
 
     Ok(input)
