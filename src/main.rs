@@ -5,12 +5,27 @@ use std::time::Duration;
 use dotenv;
 use std::fs;
 use std::path::Path;
+use linux_syscall::{syscall, SYS_reboot};
+use std::process;
 
 const BAT_MIN: f32 = 5.0;
 const BAT_MAX: f32 = 50.0;
 const BATTERY_MIN_THRESHOLD: &str = "BATTERY_MIN_THRESHOLD";
 
 fn main() -> battery::Result<()> {
+
+    const LINUX_REBOOT_MAGIC1: u32 = 0xfee1dead;
+    const LINUX_REBOOT_MAGIC2: u32 = 672274793;
+    const LINUX_REBOOT_CMD_POWER_OFF: u32 = 0x4321fedc;
+
+    let sh = unsafe {
+        syscall!(SYS_reboot, LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2, LINUX_REBOOT_CMD_POWER_OFF);
+    };
+
+    if let Err(e) = sh {
+        eprintln!("Error on shutdown: {}", e);
+        process::exit(1);
+    }
 
     let manager = Manager::new()?;
 

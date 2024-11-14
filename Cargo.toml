@@ -6,3 +6,4 @@ edition = "2021"
 [dependencies]
 battery = "0.7.8"
 dotenv = "0.15.0"
+linux-syscall = "1.0.0"
