@@ -1,23 +1,15 @@
 use battery::{Manager, units::ratio::percent};
-use std::io;
-use std::thread;
+use std::{io,thread, fs};
 use std::time::Duration;
 use dotenv;
-use std::fs;
 use std::path::Path;
-use std::process;
-use system_shutdown::logout;
+use system_shutdown::shutdown;
 
 const BAT_MIN: f32 = 5.0;
 const BAT_MAX: f32 = 50.0;
 const BATTERY_MIN_THRESHOLD: &str = "BATTERY_MIN_THRESHOLD";
 
 fn main() -> battery::Result<()> {
-
-    match logout() {
-        Ok(_) => println!("Shutting down my guy"),
-        Err(e) => println!("Error while logging out: {}", e),
-    }
 
     let manager = Manager::new()?;
 
@@ -35,13 +27,19 @@ fn main() -> battery::Result<()> {
         }
     };
 
-    loop {
+    loop{
             
         let b_percentage: f32 = battery.state_of_charge().get::<percent>();
-        if b_percentage >= battery_threshold as f32 {
-            println!("Battery Level is={}%", b_percentage);
+
+        if b_percentage <= battery_threshold as f32 {
+            match shutdown() {
+                Ok(_) => println!("You Battery Is too low. I am Shutting down!"),
+                Err(e) => println!("Error during power down: {}", e),
+            }
         }
-        thread::sleep(Duration::from_secs(1));
+
+        println!("Battery Level is={}%", b_percentage);
+        thread::sleep(Duration::from_secs(60));
         manager.refresh(&mut battery)?;
     }
 }
