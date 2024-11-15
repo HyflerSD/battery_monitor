@@ -13,7 +13,9 @@ fn main() -> battery::Result<()> {
 
     let manager = Manager::new()?;
 
-    let battery_threshold: f32 = init_threshold(); 
+    // Will let user chose this later
+    //let battery_threshold: f32 = init_threshold();
+    let battery_threshold: f32 = 10.0;
 
     let mut battery = match manager.batteries()?.next() {
         Some(Ok(battery)) => battery,
