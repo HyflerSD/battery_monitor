@@ -27,17 +27,18 @@ Create service file names 'battery_monitor' inside /etc/systemd/system
 Paste the content below inside the battery_monitor.service file:
 (Be sure to update the path of ExecStart to where your exetuble was installed. Run "which battery_monitor" to find the path)
 
-`[Unit]
-``Description=Battery Monitor Service
-`After=network.target
+```
+[Unit]
+Description=Battery Monitor Service
+After=network.target
 
-`[Service]
-``ExecStart=/path/to/your/binary/battery_monitor
-`Restart=on-failure
+[Service]
+ExecStart=/path/to/your/binary/battery_monitor
+Restart=on-failure
 
-`[Install]
-``WantedBy=multi-user.target`
-
+[Install]
+WantedBy=multi-user.target
+```
 After saving enable and start the service
 
 `sudo systemctl daemon-reload`
