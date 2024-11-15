@@ -9,21 +9,28 @@ And will prompt user once threshold is met with an option to bypass.
 Download the latest release from https://github.com/HyflerSD/battery_monitor/releases
 
 ### 2. Install the package
-`wget https://github.com/HyflerSD/battery_monitor/releases/download/v.0.0.3/battery-monitor_0.1.0-1_amd64.deb`
+```
+wget https://github.com/HyflerSD/battery_monitor/releases/download/v.0.0.3/battery-monitor_0.1.0-1_amd64.deb
 
-`sudo dpkg -i battery-monitor_0.1.0-1_amd64.deb`
+```
+```
+sudo dpkg -i battery-monitor_0.1.0-1_amd64.deb
+```
 
 To see where it was installed run:
-`which battery_monitor`
-
+```
+which battery_monitor
+```
 If you need to:
-`sudo apt --fix-broken install`
-
+```
+sudo apt --fix-broken install
+```
 ### 3. Turn executable into a service
 Create service file names 'battery_monitor' inside /etc/systemd/system
 
-`sudo vim /etc/systemd/system/battery_monitor.service`
-
+```
+sudo vim /etc/systemd/system/battery_monitor.service
+```
 Paste the content below inside the battery_monitor.service file:
 (Be sure to update the path of ExecStart to where your exetuble was installed. Run "which battery_monitor" to find the path)
 
