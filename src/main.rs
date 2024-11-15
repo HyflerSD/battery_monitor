@@ -35,12 +35,10 @@ fn main() -> battery::Result<()> {
 
         if b_percentage <= battery_threshold as f32 {
             match shutdown() {
-                Ok(_) => println!("You Battery Is too low. I am Shutting down!"),
                 Err(e) => println!("Error during power down: {}", e),
+                Ok(_) => () //println!("You Battery Is too low. I am Shutting down!"),
             }
         }
-
-        println!("Battery Level is={}%", b_percentage);
         thread::sleep(Duration::from_secs(60));
         manager.refresh(&mut battery)?;
     }
