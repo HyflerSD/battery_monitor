@@ -48,6 +48,12 @@ WantedBy=multi-user.target
 ```
 After saving enable and start the service
 
-```sudo systemctl daemon-reload```
-```sudo systemctl enable battery_monitor```
-```sudo systemctl start battery_monitor```
+```
+sudo systemctl daemon-reload
+```
+```
+sudo systemctl enable battery_monitor
+```
+```
+sudo systemctl start battery_monitor
+```
